@@ -40,6 +40,9 @@ jobs:
       - name: List all applications
         run: ibmcloud cf apps
         shell: bash
+      - name: Run migrations
+        run: python manage.py migrate
+        shell: bash
       - name: Deploy manifest file
         run: ibmcloud cf push -f ./$MANIFEST_NAME
         shell: bash
