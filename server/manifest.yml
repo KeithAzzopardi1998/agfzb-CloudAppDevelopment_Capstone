@@ -1,11 +1,11 @@
 applications:
   - name: dealerreiew
     routes:
-      - route: hkeithazzcapstone.mybluemix.net
+      - route: keithazzopardicapstone.mybluemix.net
     memory: 128M
     buildpack: python_buildpack
   - name: dealerreiew-nginx
     routes:
-      - route: keithazzcapstone.mybluemix.net/static
+      - route: keithazzopardicapstone.mybluemix.net/static
     memory: 128M
     buildpack: staticfile_buildpack
