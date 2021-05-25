@@ -6,7 +6,7 @@ on: workflow_dispatch
 env:
   IBM_CLOUD_REGION: us-south
   IBM_CLOUD_SPACE: djangoserver-space
-  IBM_CLOUD_ORG: keithazzopardicapstone.mybluemix.net
+  IBM_CLOUD_ORG: keithazzopardi.development@gmail.com
   MANIFEST_NAME: manifest.yml
   IBM_CLOUD_API: ${{secrets.IBM_CLOUD_API_KEY}}
 
