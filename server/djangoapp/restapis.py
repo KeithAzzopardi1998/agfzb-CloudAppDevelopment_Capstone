@@ -1,6 +1,6 @@
 import requests
 import json
-from .models import CarDealer
+from .models import CarDealer,DealerReview
 from requests.auth import HTTPBasicAuth
 
 
@@ -69,11 +69,43 @@ def get_dealers_by_state(url, state):
             results.append(dealer_obj)
 
     return results
+    
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
-# def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
+def get_dealer_reviews_from_cf(url, dealer_id):
+    results = []
+    # Call get_request with a URL parameter
+    json_result = get_request(url,dealerId=dealer_id)
+    if json_result:
+        # Get the row list in JSON as dealers
+        reviews = json_result["entries"]
+        # For each dealer object
+        for review_doc in reviews:
+            # Create a CarDealer object with values in `doc` object
+            if bool(review_doc['purchase']):
+                rev_obj = DealerReview(dealership=review_doc['dealership'], 
+                                        name=review_doc['name'],
+                                        purchase=review_doc['purchase'], 
+                                        review=review_doc['review'],
+                                        purchase_date=review_doc['purchase_date'],
+                                        car_make=review_doc['car_make'],
+                                        car_model=review_doc['car_model'],
+                                        car_year=review_doc['car_model'],
+                                        #sentiment=review_doc['sentiment'],
+                                        sentiment='positive',
+                                        id=review_doc['id'])
+            else:
+                rev_obj = DealerReview(dealership=review_doc['dealership'], 
+                                        name=review_doc['name'],
+                                        purchase=review_doc['purchase'], 
+                                        review=review_doc['review'],
+                                        #sentiment=review_doc['sentiment'],
+                                        sentiment='neutral',
+                                        id=review_doc['id'])                
+            results.append(rev_obj)
 
+    return results
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 # def analyze_review_sentiments(text):
