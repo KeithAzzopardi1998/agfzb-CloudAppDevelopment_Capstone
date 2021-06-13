@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealers_from_cf, get_dealers_by_state, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealers_by_state, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -114,6 +114,28 @@ def get_dealer_details(request, dealer_id):
         return HttpResponse(review_vals)
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id):
+    #context = {}
+    # Handles POST request
+    if request.method == "POST":
+        # check if user is authenticated
+        if request.user.is_authenticated:
+            # If user is valid, we can post the review
+            review = {
+                "name": "Test User X",
+                "dealership": dealer_id,
+                "review": "good serivce, people were very helpful",
+                "purchase": True,
+                "purchase_date": "03/18/2021",
+                "car_make": "Audi",
+                "car_model": "Q2",
+                "car_year": 2019
+            }
+            json_payload = { "review" : review}
+            url = "https://b591b18d.us-south.apigw.appdomain.cloud/api/review"
+            response = post_request(url=url,json_payload=json_payload)
+            return HttpResponse(response)
+        else:
+            print("authentication failed")
+            return HttpResponse("Please log in")
 
