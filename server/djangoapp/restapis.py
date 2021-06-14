@@ -106,9 +106,10 @@ def get_dealer_reviews_from_cf(url, dealer_id):
                                         purchase=review_doc['purchase'], 
                                         review=review_doc['review'],
                                         purchase_date=review_doc['purchase_date'],
+                                        #purchase_year=review_doc['purchase_date'][-4:],
                                         car_make=review_doc['car_make'],
                                         car_model=review_doc['car_model'],
-                                        car_year=review_doc['car_model'],
+                                        car_year=review_doc['car_year'],
                                         #sentiment=review_doc['sentiment'],
                                         sentiment=analyze_review_sentiments(review_doc['review']),
                                         id=review_doc['id'])
