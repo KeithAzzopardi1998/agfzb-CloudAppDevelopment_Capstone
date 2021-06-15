@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import related models
+from .models import CarModel
 from .restapis import get_dealers_from_cf, get_dealers_by_state, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -97,7 +97,6 @@ def get_dealerships(request):
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         context = {'dealerships' : dealerships}
         print("dealerships context:")
         print(dealerships)
@@ -127,8 +126,9 @@ def add_review(request, dealer_id):
     if request.method == "GET":
         context = {
             'dealer_id' : dealer_id,
-            'cars' : []
+            'cars' : CarModel.objects.filter(dealerId__exact=dealer_id)
         }
+        print("context for review form:",context)
         return render(request, 'djangoapp/add_review.html', context)
 
     # Handles POST request
@@ -137,11 +137,11 @@ def add_review(request, dealer_id):
         if request.user.is_authenticated:
             # If user is valid, we can post the review
             review = {
-                "name": "Test User X",
+                "name": request.user.username,
                 "dealership": dealer_id,
-                "review": "good serivce, people were very helpful",
-                "purchase": True,
-                "purchase_date": "03/18/2021",
+                "review": request.POST['content'],
+                "purchase": request.POST.get('purchasecheck', False),
+                "purchase_date": request.POST['purchasedate'],
                 "car_make": "Audi",
                 "car_model": "Q2",
                 "car_year": 2019
@@ -149,7 +149,8 @@ def add_review(request, dealer_id):
             json_payload = { "review" : review}
             url = "https://b591b18d.us-south.apigw.appdomain.cloud/api/review"
             response = post_request(url=url,json_payload=json_payload)
-            return HttpResponse(response)
+            print("Response from adding a review:")
+            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
         else:
             print("authentication failed")
             return HttpResponse("Please log in")

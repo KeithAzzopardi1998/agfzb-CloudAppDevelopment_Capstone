@@ -11,32 +11,12 @@
 
 </head>
     <body>
-    <for action="{% url 'djangoapp:review' dealer_id%}" method="post">
+    <form action="{% url 'djangoapp:review' dealer_id%}" method="post">
         <div class="container"> <!--Style root div with .container class -->
-           
+            {% csrf_token %}
             <h1>Add a Dealer Review</h1>
             <hr>
             <div class="form-group"> <!--Style second div with .form-group class -->
-                <!----
-                <label for="content" class="form-control-label"><b>Comments</b></label>
-                <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
-                
-
-                <label for="purchasecheck" class="form-check-label"><b>Have you purchased a car from this dealer?</b></label>
-                <input class="form-check-input form-control" type="checkbox" name="purchasecheck" id="purchasecheck">
-
-                <label for="car" class="form-control-label" ><b>Please select the car you purchased</b></label>
-                <select name="car" id="car" class="form-select" required>
-                    {% for car in cars %}
-                        <option selected value={{car.id}}>{{car.name}}-{{car.make.name}}-{{ car.year|date:"Y" }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="purchasedate" class="form-control-label" ><b>Purchase Date</b></label>
-                <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">                
-                -->
-
-
                 <div class="form-group">
                     <label for="content">Comments</label>
                     <textarea class="form-control" id="content" name="content" rows="3"></textarea>
