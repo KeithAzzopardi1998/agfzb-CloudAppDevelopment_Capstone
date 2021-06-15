@@ -123,6 +123,14 @@ def get_dealer_details(request, dealer_id):
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
     #context = {}
+    # Handles GET request
+    if request.method == "GET":
+        context = {
+            'dealer_id' : dealer_id,
+            'cars' : []
+        }
+        return render(request, 'djangoapp/add_review.html', context)
+
     # Handles POST request
     if request.method == "POST":
         # check if user is authenticated
