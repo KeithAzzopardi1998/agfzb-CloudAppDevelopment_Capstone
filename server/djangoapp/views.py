@@ -135,6 +135,15 @@ def add_review(request, dealer_id):
     if request.method == "POST":
         # check if user is authenticated
         if request.user.is_authenticated:
+            print("car info from form:",request.POST['car'])
+            carmodel_id = request.POST['car']
+            #temp = str(CarModel.objects.get(pk=carmodel_id).make)
+            #print("make:",temp,type(temp))
+            #temp = CarModel.objects.get(pk=carmodel_id).name
+            #print("model:",temp,type(temp))
+            #temp = CarModel.objects.get(pk=carmodel_id).year.year
+            #print("year:",temp,type(temp))
+            
             # If user is valid, we can post the review
             review = {
                 "name": request.user.username,
@@ -142,14 +151,14 @@ def add_review(request, dealer_id):
                 "review": request.POST['content'],
                 "purchase": request.POST.get('purchasecheck', False),
                 "purchase_date": request.POST['purchasedate'],
-                "car_make": "Audi",
-                "car_model": "Q2",
-                "car_year": 2019
+                "car_make": str(CarModel.objects.get(pk=carmodel_id).make),
+                "car_model": CarModel.objects.get(pk=carmodel_id).name,
+                "car_year": CarModel.objects.get(pk=carmodel_id).year.year
             }
             json_payload = { "review" : review}
             url = "https://b591b18d.us-south.apigw.appdomain.cloud/api/review"
             response = post_request(url=url,json_payload=json_payload)
-            print("Response from adding a review:")
+            #print("Response from adding a review:", response)
             return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
         else:
             print("authentication failed")
